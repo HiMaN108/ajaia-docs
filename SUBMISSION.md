@@ -2,7 +2,7 @@
 
 | Item | Where |
 |---|---|
-| **Live product URL** | _<add Vercel URL>_ |
+| **Live product URL** | **https://ajaia-docs-six-gules.vercel.app** |
 | **Walkthrough video** | [`VIDEO_URL.txt`](VIDEO_URL.txt) |
 | **Demo accounts** | `alice@ajaia.dev` (owner), `bob@ajaia.dev` (editor), `carol@ajaia.dev` (viewer). Password for all: **`demo1234`** |
 | **Source code** | This folder (Next.js app: `src/`, migrations: `drizzle/`, seed: `scripts/`) |
