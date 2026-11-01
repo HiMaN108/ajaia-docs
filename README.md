@@ -84,6 +84,8 @@ See [`.env.example`](.env.example). Local dev needs none.
    ```
 3. **Vercel:** import the repo (or run `npx vercel`), then set `DATABASE_URL`, `DATABASE_AUTH_TOKEN` and `SESSION_SECRET` for Production, and deploy. No build settings need changing.
 
+The live deployment is connected to this GitHub repo: every push to `main` deploys to production automatically.
+
 ## Status
 
 **Working end to end:** everything in the Features table, covered by automated tests and verified in a real browser.
