@@ -34,6 +34,9 @@
 | Returning **403** to users with no access | Changed to **404**, so a document's existence isn't revealed. 403 is kept for "you can see it but can't do that". |
 | A hydration warning in the e2e logs | Investigated rather than ignored. The diff was Playwright's injected `caret-color` style (a test artifact, not app code), but it surfaced a real latent mismatch in the "Edited X ago" time, which was then fixed. |
 | A failing Markdown round-trip test | The *test fixture* was wrong (it added empty `marks: []`), not the code. Fixed the helper, not the implementation. |
+| UI redesign from AI-generated HTML mockups (Tailwind CDN, static data) | Used as a **visual reference only**. Rebuilt as typed React components on the existing data, and **rejected every mockup feature with no backend** (storage quota, favorites, presence avatars, version history, PDF export, tables/images, fake stats) instead of shipping dead UI. |
+| Redesign lint findings (React Compiler) | Tile handlers that read a ref during render, setState in an effect, and `location.href` mutation: fixed by static tile data, server-provided initial collaborators, and `location.assign`. |
+| Redesign visual review | Screenshots caught a save pill that wrapped and overlapped icons on mobile, a read-only status bar missing its word count (stats hook ran before the editor existed), and an over-wide title field. All three were fixed and re-verified. |
 | Two stray files (`a.png`, cookie jars) written to the repo by a smoke script after a failed `cd` | Caught in `git status` before committing and deleted. |
 
 ## How I verified correctness, UX quality and reliability

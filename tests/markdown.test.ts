@@ -36,3 +36,19 @@ describe("docToMarkdown", () => {
     expect(content).toMatchObject(original);
   });
 });
+
+describe("document stats", async () => {
+  const { docToText, textStats } = await import("@/lib/editor/stats");
+  it("counts words, characters and read time like the editor", () => {
+    const text = docToText({
+      type: "doc",
+      content: [
+        { type: "heading", attrs: { level: 1 }, content: [{ type: "text", text: "Hello world" }] },
+        { type: "paragraph", content: [{ type: "text", text: "one " }, { type: "text", marks: [{ type: "bold" }], text: "two" }] },
+      ],
+    });
+    expect(text).toBe("Hello world\none two");
+    expect(textStats(text)).toEqual({ words: 4, characters: 18, readMinutes: 1 });
+    expect(textStats("")).toEqual({ words: 0, characters: 0, readMinutes: 1 });
+  });
+});

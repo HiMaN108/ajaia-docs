@@ -2,13 +2,16 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { listDocuments } from "@/lib/documents";
-import { AppHeader } from "@/components/AppHeader";
-import { DashboardActions } from "@/components/DashboardActions";
-import { DocumentList } from "@/components/DocumentList";
+import { AppShell } from "@/components/shell/AppShell";
+import { DashboardHero } from "@/components/dashboard/DashboardHero";
+import { DocumentsBrowser } from "@/components/dashboard/DocumentsBrowser";
+import { EmptyState } from "@/components/dashboard/EmptyState";
+import { SharingGuide } from "@/components/dashboard/SharingGuide";
+import { PageSkeleton } from "@/components/PageSkeleton";
 
 export default function HomePage() {
   return (
-    <Suspense fallback={<DashboardSkeleton />}>
+    <Suspense fallback={<PageSkeleton />}>
       <Dashboard />
     </Suspense>
   );
@@ -20,41 +23,21 @@ async function Dashboard() {
   const { owned, shared } = await listDocuments(user.id);
 
   return (
-    <>
-      <AppHeader user={user} />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-6">
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-semibold text-slate-900">Documents</h1>
-            <p className="text-sm text-slate-500">Create, import and share documents with your team.</p>
-          </div>
-          <DashboardActions />
-        </div>
-
-        <DocumentList
-          title="Owned by me"
-          docs={owned}
-          emptyText="You don't own any documents yet. Create one or import a file to get started."
+    <AppShell user={user} breadcrumb="Dashboard">
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 lg:py-8">
+        <DashboardHero firstName={user.name.split(" ")[0]} ownedCount={owned.length} sharedCount={shared.length} />
+        <h2 className="mb-3 font-display text-lg font-semibold text-on-surface">Documents</h2>
+        <DocumentsBrowser
+          tabs
+          docs={[...owned, ...shared]}
+          emptyState={
+            <EmptyState icon="note_stack" title="No documents yet">
+              Create a blank document or import a file to get started.
+            </EmptyState>
+          }
         />
-        <DocumentList
-          title="Shared with me"
-          docs={shared}
-          emptyText="Nothing has been shared with you yet."
-        />
+        <SharingGuide />
       </main>
-    </>
-  );
-}
-
-function DashboardSkeleton() {
-  return (
-    <div className="mx-auto w-full max-w-5xl animate-pulse px-6 py-20">
-      <div className="mb-6 h-7 w-48 rounded bg-slate-200" />
-      <div className="space-y-3">
-        {[0, 1, 2].map((i) => (
-          <div key={i} className="h-16 rounded-lg bg-slate-100" />
-        ))}
-      </div>
-    </div>
+    </AppShell>
   );
 }

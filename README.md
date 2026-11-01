@@ -30,12 +30,13 @@ All passwords are **`demo1234`**. The login page has one-click buttons for each 
 | Area | What works |
 |---|---|
 | **Documents** | Create, rename (click the title), edit, delete (owner only), reopen. Autosave runs ~0.8 s after you stop typing and shows a *Saving… / All changes saved / Not saved, Retry* indicator. You get a warning before closing a tab with unsaved changes |
-| **Rich text** | Bold, italic, underline, strikethrough, Heading 1–3, bulleted and numbered lists (nestable with Tab), blockquote, undo/redo, standard keyboard shortcuts (⌘B / ⌘I / ⌘U …) and Markdown-style shortcuts (`# `, `- `, `1. `) |
+| **Rich text** | Bold, italic, underline, strikethrough, inline code, links, Heading 1–3, bulleted and numbered lists (nestable with Tab), blockquote, code block, divider, undo/redo, standard keyboard shortcuts (⌘B / ⌘I / ⌘U …) and Markdown-style shortcuts (`# `, `- `, `1. `) |
 | **File import** | **`.txt`, `.md`, `.docx` only, max 2 MB.** Each upload becomes a new document owned by the uploader. Headings, lists, bold, italic and underline are preserved. Images, tables and other unsupported content are dropped (stated in the UI next to the button) |
 | **Sharing** | Owner shares by email as **Viewer** or **Editor**, changes roles and removes access. The dashboard separates **Owned by me** from **Shared with me**, with role badges and owner names. Viewers get a read-only editor |
 | **Access control** | Enforced on the server for every request (not only hidden in the UI). Users with no access get **404**, so a document's existence isn't revealed. Viewers who try to write get **403** |
 | **Export** _(stretch)_ | Download any document you can read as Markdown |
 | **Persistence** | SQLite (local file) / Turso (production). Content is stored as editor JSON, so formatting round-trips exactly |
+| **Workspace UI** | Sidebar layout with **Dashboard** (quick-start tiles; All / Owned by me / Shared with me tabs; search, sort, list/grid view), **Shared with me** (filter by owner), **Import** (drag and drop with a staged-file preview), **Editor** (sticky toolbar, live word/character count, focus mode) and **Document settings** (rename, export, details, people with access, delete). Responsive down to phone width |
 
 ## Run locally
 
@@ -52,7 +53,7 @@ npm run dev          # http://localhost:3000
 ### Tests
 
 ```bash
-npm test             # Vitest: 34 unit + integration tests (in-memory SQLite, ~1 s)
+npm test             # Vitest: 36 unit + integration tests (in-memory SQLite, ~1 s)
 npm run test:e2e     # Playwright: full browser flow (first run: npx playwright install chromium)
 npm run typecheck && npm run lint
 ```
@@ -63,7 +64,7 @@ What's covered:
 - **Persistence:** rich content round-trips exactly. Content that doesn't match the editor schema is rejected.
 - **Import:** a real `.docx`, Markdown (including a script/`onerror` sanitization check) and plain text. Also covers rejection of unsupported, empty, oversized and fake files.
 - **Markdown export,** including an export → import round-trip.
-- **E2E (real browser):** login → create → format via toolbar and shortcuts → autosave → reload and assert formatting → export → share (including the error case) → log in as the collaborator and see a read-only doc. Plus `.docx` import. This test also generates the images in [`screenshots/`](screenshots).
+- **E2E (real browser):** login → create → format via toolbar and shortcuts → autosave → reload and assert formatting → export → share (including the error case) → settings page (stats and collaborator list) → log in as the collaborator, find the doc on the Shared page and see it read-only. Plus `.docx` import through the drag-and-drop Import page. This test also generates the images in [`screenshots/`](screenshots).
 
 ### Environment variables
 
@@ -108,8 +109,11 @@ src/
     api/…                 REST route handlers (thin: auth → zod parse → service → JSON)
     page.tsx              Dashboard (owned / shared)
     doc/[id]/page.tsx     Editor page
+    shared/, import/      Shared with me, Import pages
+    doc/[id]/settings/    Document settings page
     login/                Login page
-  components/             UI (editor, toolbar, autosave hook, share dialog, lists)
+  components/             UI: shell/ (sidebar, layout), dashboard/, editor/, import/, settings/, share dialog
+                          icon-names.ts = icon font subset (checked by tests/icons.test.ts)
   lib/
     access.ts             The access policy: role → allowed actions
     documents.ts          Document + sharing service (all business rules live here)

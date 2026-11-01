@@ -21,7 +21,12 @@ export type DocumentSummary = {
   owner: { id: string; name: string; email: string };
 };
 
-export type DocumentDetail = DocumentSummary & { content: JSONContent };
+export type DocumentDetail = DocumentSummary & {
+  content: JSONContent;
+  createdAt: string;
+  /** Size of the stored document JSON, in bytes. */
+  contentBytes: number;
+};
 
 export type Collaborator = { userId: string; name: string; email: string; role: ShareRole };
 
@@ -75,6 +80,8 @@ function toDetail(l: Awaited<ReturnType<typeof loadWithRole>>): DocumentDetail {
     role: l.role,
     owner: { id: l.doc.ownerId, name: l.ownerName, email: l.ownerEmail },
     content,
+    createdAt: l.doc.createdAt.toISOString(),
+    contentBytes: Buffer.byteLength(l.doc.contentJson, "utf8"),
   };
 }
 

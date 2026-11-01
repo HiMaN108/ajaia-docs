@@ -9,7 +9,7 @@ import { expect, test, type Page } from "@playwright/test";
 async function loginAs(page: Page, email: string) {
   await page.goto("/login");
   await page.getByRole("button", { name: new RegExp(email) }).click();
-  await expect(page.getByRole("heading", { name: "Documents" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Documents", exact: true })).toBeVisible();
 }
 
 async function logout(page: Page) {
@@ -23,10 +23,10 @@ test("create, format, persist, share, and view as collaborator", async ({ page }
 
   // --- Alice creates and formats a document
   await loginAs(page, "alice@ajaia.dev");
-  await expect(page.getByText("Owned by me")).toBeVisible();
-  await page.screenshot({ path: "screenshots/02-dashboard-alice.png" });
+  await expect(page.getByRole("tab", { name: /Owned by me/ })).toBeVisible();
+  await page.screenshot({ path: "screenshots/02-dashboard-alice.png", fullPage: true });
 
-  await page.getByRole("button", { name: /New document/ }).click();
+  await page.getByRole("button", { name: "New document" }).first().click();
   await expect(page).toHaveURL(/\/doc\//);
 
   const title = page.getByLabel("Document title");
@@ -87,17 +87,27 @@ test("create, format, persist, share, and view as collaborator", async ({ page }
   await page.screenshot({ path: "screenshots/04-share-dialog.png" });
   await dialog.getByRole("button", { name: "Close" }).click();
 
+  // --- Settings page: real stats and the collaborator list
+  await page.getByRole("link", { name: "Settings" }).click();
+  await expect(page.getByRole("heading", { name: /E2E Launch Plan/ })).toBeVisible();
+  await expect(page.getByText("Words", { exact: true })).toBeVisible();
+  await expect(page.getByRole("main").getByText("bob@ajaia.dev", { exact: true })).toBeVisible();
+  await page.screenshot({ path: "screenshots/08-document-settings.png" });
+
   await page.goto("/");
   await logout(page);
 
   // --- Bob sees it under "Shared with me", read-only
   await loginAs(page, "bob@ajaia.dev");
-  const shared = page.locator("section", { hasText: "Shared with me" });
-  await expect(shared.getByText("E2E Launch Plan")).toBeVisible();
-  await expect(shared.locator("li", { hasText: "E2E Launch Plan" }).getByText("View only")).toBeVisible();
-  await page.screenshot({ path: "screenshots/05-dashboard-bob-shared.png" });
+  await page.getByRole("tab", { name: /Shared with me/ }).click();
+  const row = page.locator("li", { hasText: "E2E Launch Plan" });
+  await expect(row.getByText("Viewer", { exact: true })).toBeVisible();
+  await page.getByRole("link", { name: "Shared with me" }).first().click();
+  await expect(page.getByRole("heading", { name: "Shared with me" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "E2E Launch Plan" })).toBeVisible(); // role queries skip the hidden, still-mounted previous page
+  await page.screenshot({ path: "screenshots/05-shared-with-me.png" });
 
-  await shared.getByText("E2E Launch Plan").click();
+  await page.getByRole("link", { name: "E2E Launch Plan" }).click();
   await expect(page.getByText(/View only: you can read this document/)).toBeVisible();
   await expect(page.getByLabel("Document body")).toHaveAttribute("contenteditable", "false");
   await expect(page.getByLabel("Document title")).toBeDisabled();
@@ -107,7 +117,11 @@ test("create, format, persist, share, and view as collaborator", async ({ page }
 
 test("import a .docx file as a new document", async ({ page }) => {
   await loginAs(page, "carol@ajaia.dev");
-  await page.locator('input[type="file"]').setInputFiles("tests/fixtures/sample.docx");
+  await page.getByRole("link", { name: "Import file" }).first().click();
+  await page.getByLabel("Choose file to import").setInputFiles("tests/fixtures/sample.docx");
+  await expect(page.getByText("Ready to import")).toBeVisible();
+  await page.screenshot({ path: "screenshots/09-import-page.png" });
+  await page.getByRole("button", { name: "Import as document" }).click();
   await expect(page).toHaveURL(/\/doc\//);
   await expect(page.getByLabel("Document title")).toHaveValue("sample");
   const body = page.getByLabel("Document body");

@@ -87,6 +87,10 @@ Server-rendered pages (`/`, `/doc/[id]`) call the same service functions directl
 - **Errors are product copy.** Every 4xx carries a sentence the UI shows as is ("No user found with email …", "File is too large (max 2 MB).").
 - **Production safety:** the app refuses to sign sessions in production without a ≥ 32-char `SESSION_SECRET`. Login compares a bcrypt hash even for unknown emails, so response timing doesn't reveal which accounts exist.
 
+## UI design
+
+The interface follows a Material-3-style indigo design system (tokens in `globals.css` as Tailwind v4 `@theme` variables), with a sidebar workspace layout, Geist/Inter fonts and Material Symbols icons. It was adapted from reference mockups, keeping only features that actually work. Mockup elements with no backend (storage quota, favorites, live presence, version history, notifications, PDF export, tables/images, invite links) were deliberately left out rather than shipped as dead buttons. The icon font is requested subset to the ~60 glyphs the app uses, and a test fails if a component references an icon outside that list.
+
 ## Known limitations
 
 - Last write wins for simultaneous editors (see the README for the 409-based fix).

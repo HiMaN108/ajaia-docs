@@ -1,50 +1,110 @@
 @import "tailwindcss";
 
+/* ---------- design tokens (Material-3-style indigo palette) ---------- */
+@theme {
+  --color-primary: #3725cd;
+  --color-primary-container: #5146e5;
+  --color-on-primary: #ffffff;
+  --color-primary-fixed: #e3dfff;
+  --color-on-primary-fixed: #100069;
+  --color-on-primary-fixed-variant: #3522cb;
+
+  --color-secondary: #5a5e6f;
+  --color-secondary-container: #dee1f6;
+  --color-on-secondary-container: #4a4e5f;
+
+  --color-tertiary: #005434;
+  --color-tertiary-container: #006f46;
+  --color-tertiary-fixed: #c6f7dc;
+  --color-on-tertiary-fixed: #002111;
+
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  --color-warning-container: #fff1d6;
+  --color-on-warning-container: #6b4300;
+
+  --color-background: #fbf8ff;
+  --color-surface: #fbf8ff;
+  --color-surface-dim: #d8d9ea;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f3f2ff;
+  --color-surface-container: #edecfe;
+  --color-surface-container-high: #e7e7f8;
+  --color-surface-container-highest: #e1e1f2;
+  --color-on-surface: #191b27;
+  --color-on-surface-variant: #464555;
+  --color-outline: #777587;
+  --color-outline-variant: #c7c4d8;
+
+  --shadow-card: 0 1px 2px rgb(25 27 39 / 0.04), 0 1px 3px rgb(25 27 39 / 0.06);
+}
+
 @theme inline {
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
-  @apply bg-slate-50 font-sans text-slate-900;
+  @apply bg-background font-sans text-on-surface;
+}
+
+/* Material Symbols: render nothing until the icon font is ready (display=block in layout). */
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 20;
+  line-height: 1;
+  user-select: none;
 }
 
 /* ---------- shared controls ---------- */
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-1.5 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-primary-container px-4 font-display text-[13px] font-medium text-on-primary shadow-card transition hover:bg-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-1.5 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-surface-container-lowest px-4 font-display text-[13px] font-medium text-on-surface shadow-card ring-1 ring-outline-variant/40 transition hover:bg-surface-container-low active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60;
   }
   .btn-ghost {
-    @apply inline-flex items-center rounded-md px-2 py-1 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900;
+    @apply inline-flex items-center gap-1 rounded-lg px-2 py-1 font-display text-[13px] text-on-surface-variant transition hover:bg-surface-container-low hover:text-on-surface;
+  }
+  .btn-danger {
+    @apply inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-error px-4 font-display text-[13px] font-medium text-white shadow-card transition hover:opacity-90 active:scale-[0.98] disabled:opacity-60;
   }
   .input {
-    @apply block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 focus:outline-none;
+    @apply block h-9 w-full rounded-lg bg-surface-container-lowest px-3 text-sm text-on-surface shadow-card ring-1 ring-outline-variant/50 outline-none transition placeholder:text-on-surface-variant/60 focus:ring-2 focus:ring-primary-container/50;
+  }
+  .card {
+    @apply rounded-xl bg-surface-container-lowest shadow-card;
+  }
+  .eyebrow {
+    @apply font-display text-[11px] font-semibold uppercase tracking-wider text-on-surface-variant;
   }
 }
 
 /* ---------- document body (ProseMirror) ---------- */
 .doc-content {
-  @apply min-h-[60vh] text-[15px] leading-7 text-slate-800 outline-none;
+  @apply min-h-[55vh] text-base leading-[1.7] text-on-surface outline-none;
 }
 .doc-content > * + * { @apply mt-3; }
-.doc-content h1 { @apply mt-6 text-3xl font-bold leading-tight text-slate-900; }
-.doc-content h2 { @apply mt-5 text-2xl font-semibold leading-snug text-slate-900; }
-.doc-content h3 { @apply mt-4 text-xl font-semibold text-slate-900; }
+.doc-content h1 { @apply mt-8 font-display text-[32px] font-semibold leading-tight tracking-tight; }
+.doc-content h2 { @apply mt-7 font-display text-2xl font-semibold leading-snug tracking-tight; }
+.doc-content h3 { @apply mt-5 font-display text-lg font-semibold; }
 .doc-content > :first-child { @apply mt-0; }
 .doc-content ul { @apply list-disc pl-6; }
 .doc-content ol { @apply list-decimal pl-6; }
 .doc-content li > p { @apply my-0.5; }
-.doc-content li::marker { @apply text-slate-500; }
-.doc-content blockquote { @apply border-l-4 border-slate-300 pl-4 text-slate-600 italic; }
-.doc-content a { @apply text-blue-600 underline; }
-.doc-content code { @apply rounded bg-slate-100 px-1 py-0.5 font-mono text-[0.9em]; }
-.doc-content pre { @apply rounded-md bg-slate-900 p-4 font-mono text-sm text-slate-100; }
-.doc-content pre code { @apply bg-transparent p-0; }
-.doc-content hr { @apply my-6 border-slate-200; }
+.doc-content li::marker { @apply text-primary-container; }
+.doc-content blockquote {
+  @apply rounded-r-lg border-l-4 border-primary-container bg-surface-container-low py-2 pr-4 pl-5 text-on-surface-variant italic;
+}
+.doc-content a { @apply text-primary underline underline-offset-2; }
+.doc-content code { @apply rounded bg-surface-container px-1.5 py-0.5 font-mono text-[0.88em] text-primary; }
+.doc-content pre { @apply rounded-lg bg-[#1d1b2e] p-4 font-mono text-sm leading-6 text-[#e7e6ff]; }
+.doc-content pre code { @apply bg-transparent p-0 text-inherit; }
+.doc-content hr { @apply my-8 border-outline-variant/60; }
 .doc-content p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
-  @apply pointer-events-none float-left h-0 text-slate-400;
+  @apply pointer-events-none float-left h-0 text-on-surface-variant/50;
 }

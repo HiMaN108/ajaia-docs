@@ -3,7 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Collaborator } from "@/lib/documents";
 import { api } from "@/lib/client";
-import { Avatar } from "./AppHeader";
+import { Icon } from "./Icon";
+import { RoleBadge } from "./RoleBadge";
+import { Avatar } from "./shell/Avatar";
 
 type ShareRole = Collaborator["role"];
 
@@ -84,15 +86,20 @@ export function ShareDialog({
       ref={dialog}
       onClose={onClose}
       onClick={(e) => e.target === dialog.current && onClose()}
-      className="m-auto w-full max-w-lg rounded-xl p-0 shadow-xl backdrop:bg-slate-900/40"
+      className="m-auto w-full max-w-lg rounded-xl bg-surface-container-lowest p-0 shadow-xl backdrop:bg-on-surface/40 backdrop:backdrop-blur-sm"
     >
       <div className="p-6">
         <div className="mb-4 flex items-start justify-between gap-4">
-          <h2 className="text-lg font-semibold text-slate-900">
-            Share &ldquo;<span className="break-all">{docTitle}</span>&rdquo;
-          </h2>
-          <button className="btn-ghost -mr-2 -mt-1 text-xl leading-none" aria-label="Close" onClick={onClose}>
-            ×
+          <div className="flex items-center gap-3">
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary-fixed text-primary">
+              <Icon name="person_add" className="text-[22px]" />
+            </span>
+            <h2 className="font-display text-lg font-semibold text-on-surface">
+              Share &ldquo;<span className="break-all">{docTitle}</span>&rdquo;
+            </h2>
+          </div>
+          <button className="btn-ghost -mt-1 -mr-2 h-8 w-8 justify-center" aria-label="Close" onClick={onClose}>
+            <Icon name="close" className="text-[20px]" />
           </button>
         </div>
 
@@ -120,46 +127,46 @@ export function ShareDialog({
             {busy ? "Sharing…" : "Share"}
           </button>
         </form>
-        <p className="mt-1.5 text-xs text-slate-500">
+        <p className="mt-1.5 font-mono text-[11px] text-on-surface-variant">
           Demo users: bob@ajaia.dev, carol@ajaia.dev, alice@ajaia.dev
         </p>
 
         {error && (
-          <p role="alert" className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p role="alert" className="mt-3 flex items-center gap-2 rounded-lg bg-error-container px-3 py-2 text-sm text-on-error-container">
             {error}
           </p>
         )}
         {notice && (
-          <p role="status" className="mt-3 rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+          <p role="status" className="mt-3 flex items-center gap-2 rounded-lg bg-tertiary-fixed px-3 py-2 text-sm text-on-tertiary-fixed">
             {notice}
           </p>
         )}
 
-        <h3 className="mb-2 mt-6 text-sm font-medium text-slate-700">People with access</h3>
-        <ul className="space-y-1">
+        <h3 className="eyebrow mt-6 mb-2">People with access</h3>
+        <ul className="space-y-1 rounded-lg bg-surface-container-low px-3 py-1.5">
           <li className="flex items-center gap-3 py-1.5 text-sm">
-            <span className="grid h-7 w-7 place-items-center rounded-full bg-blue-600 text-xs font-semibold text-white">You</span>
-            <span className="flex-1 text-slate-800">You</span>
-            <span className="text-xs text-slate-500">Owner</span>
+            <span className="grid h-7 w-7 place-items-center rounded-full bg-primary-container font-display text-[10px] font-semibold text-on-primary">You</span>
+            <span className="flex-1 font-display text-on-surface">You</span>
+            <RoleBadge role="owner" />
           </li>
-          {collaborators === null && !error && <li className="py-2 text-sm text-slate-400">Loading…</li>}
+          {collaborators === null && !error && <li className="py-2 text-sm text-on-surface-variant">Loading…</li>}
           {collaborators?.map((c) => (
             <li key={c.userId} className="flex items-center gap-3 py-1.5 text-sm">
-              <Avatar name={c.name} size="sm" />
+              <Avatar name={c.name} seed={c.email} size="sm" />
               <div className="min-w-0 flex-1">
-                <div className="truncate text-slate-800">{c.name}</div>
-                <div className="truncate text-xs text-slate-500">{c.email}</div>
+                <div className="truncate font-display text-on-surface">{c.name}</div>
+                <div className="truncate font-mono text-[11px] text-on-surface-variant">{c.email}</div>
               </div>
               <select
                 aria-label={`Access for ${c.name}`}
-                className="rounded-md border-0 bg-transparent py-1 text-xs text-slate-700 hover:bg-slate-100"
+                className="cursor-pointer rounded-md bg-transparent px-1 py-1 font-display text-xs text-on-surface outline-none hover:bg-surface-container-low"
                 value={c.role}
                 onChange={(e) => void share(c.email, e.target.value as ShareRole)}
               >
                 <option value="editor">Editor</option>
                 <option value="viewer">Viewer</option>
               </select>
-              <button className="btn-ghost text-xs text-slate-500 hover:text-red-600" onClick={() => void revoke(c)}>
+              <button className="btn-ghost text-xs hover:text-error" onClick={() => void revoke(c)}>
                 Remove
               </button>
             </li>

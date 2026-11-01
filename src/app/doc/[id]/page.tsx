@@ -29,9 +29,9 @@ async function DocLoader({ params }: { params: Promise<{ id: string }> }) {
 
 function EditorSkeleton() {
   return (
-    <div className="flex-1 animate-pulse bg-slate-100">
-      <div className="h-14 border-b border-slate-200 bg-white" />
-      <div className="mx-auto mt-10 h-[70vh] max-w-[816px] rounded bg-white" />
+    <div className="flex-1 animate-pulse lg:pl-64">
+      <div className="h-24 border-b border-outline-variant/30 bg-surface-container-lowest" />
+      <div className="mx-auto mt-8 h-[70vh] max-w-[860px] rounded-2xl bg-surface-container-lowest" />
     </div>
   );
 }

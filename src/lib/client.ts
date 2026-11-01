@@ -13,7 +13,7 @@ export async function api<T = unknown>(url: string, init: RequestInit = {}): Pro
   if (res.status === 401 && typeof window !== "undefined" && !url.includes("/api/auth/login")) {
     // Session expired: hard redirect, this helper has no router.
     // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-    window.location.href = "/login";
+    window.location.assign("/login");
   }
   if (res.status === 204) return undefined as T;
   const data = await res.json().catch(() => ({}));
