@@ -3,6 +3,7 @@
 A small full-stack document editor inspired by Google Docs. You can create and edit rich-text documents, import files, share with teammates as **Viewer** or **Editor**, and export to Markdown.
 
 - **Live app:** **https://ajaia-docs-six-gules.vercel.app**
+- **Source code:** https://github.com/HiMaN108/ajaia-docs
 - **Walkthrough video:** see [`VIDEO_URL.txt`](VIDEO_URL.txt)
 - **Architecture note:** [`ARCHITECTURE.md`](ARCHITECTURE.md) · **AI workflow note:** [`AI_WORKFLOW.md`](AI_WORKFLOW.md) · **Contents:** [`SUBMISSION.md`](SUBMISSION.md)
 
