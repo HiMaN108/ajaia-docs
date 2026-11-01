@@ -1,6 +1,6 @@
 # Plan: Lightweight Collaborative Doc Editor ("Ajaia Docs")
 
-Status: **DRAFT, waiting for review.** No code until approved.
+Status: **Approved; implemented.** All recommended options were chosen (Next.js + Tiptap + SQLite/Turso + Vercel; Viewer + Editor roles; import as a new doc; Markdown export stretch; seeded demo users). This file is kept as the original pre-implementation plan.
 
 ## 1. Product slice (what we're building)
 
