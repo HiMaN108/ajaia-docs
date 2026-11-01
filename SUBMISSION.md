@@ -3,7 +3,7 @@
 | Item | Where |
 |---|---|
 | **Live product URL** | **https://ajaia-docs-six-gules.vercel.app** |
-| **Walkthrough video** | [`VIDEO_URL.txt`](VIDEO_URL.txt) |
+| **Walkthrough video** | https://www.youtube.com/watch?v=NGd3ZzasgFQ (also in [`VIDEO_URL.txt`](VIDEO_URL.txt)) |
 | **Demo accounts** | `alice@ajaia.dev` (owner), `bob@ajaia.dev` (editor), `carol@ajaia.dev` (viewer). Password for all: **`demo1234`** |
 | **GitHub repo** | https://github.com/HiMaN108/ajaia-docs |
 | **Source code** | This folder (Next.js app: `src/`, migrations: `drizzle/`, seed: `scripts/`) |

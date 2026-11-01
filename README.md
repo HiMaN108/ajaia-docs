@@ -4,7 +4,7 @@ A small full-stack document editor inspired by Google Docs. You can create and e
 
 - **Live app:** **https://ajaia-docs-six-gules.vercel.app**
 - **Source code:** https://github.com/HiMaN108/ajaia-docs
-- **Walkthrough video:** see [`VIDEO_URL.txt`](VIDEO_URL.txt)
+- **Walkthrough video:** https://www.youtube.com/watch?v=NGd3ZzasgFQ
 - **Architecture note:** [`ARCHITECTURE.md`](ARCHITECTURE.md) · **AI workflow note:** [`AI_WORKFLOW.md`](AI_WORKFLOW.md) · **Contents:** [`SUBMISSION.md`](SUBMISSION.md)
 
 ## Demo accounts
